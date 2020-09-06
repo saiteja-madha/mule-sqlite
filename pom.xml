@@ -6,7 +6,7 @@
 	<artifactId>sqlite-to-json</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>mule-application</packaging>
-	<name>sqlite-to-json</name>
+	<name>mule-sqlite</name>
 
     <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,6 +35,7 @@
                             <artifactId>sqlite-jdbc</artifactId>
                         </sharedLibrary>
                     </sharedLibraries>
+                <classifier>mule-application</classifier>
                 </configuration>
 			</plugin>
 		</plugins>
