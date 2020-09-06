@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<flow name="sqlite-to-jsonFlow" doc:id="7c001481-f4d2-46d0-9592-39fe139e2bb7" >
+		<http:listener doc:name="Listener" doc:id="ab6fddb8-c103-4272-9879-98fb29fe0a57" config-ref="HTTP_Listener_config" path="/data">
+			<http:error-response >
+				<http:body ><![CDATA[#[output application/json ---
+{
+	"success": false,
+	"data": error.description
+}]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<db:select doc:name="Select All Doctors" doc:id="ee8da025-08c7-4dc5-8e45-98193c13c7a7" config-ref="SQLite_DB_Configuration">
+			<db:sql><![CDATA[SELECT * FROM doctors]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Success Transformation" doc:id="3ee8f180-1647-4820-a85e-f39715886cd8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"success": true,
+	"data": payload
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	
+</mule>
